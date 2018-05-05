@@ -19,6 +19,7 @@ services:
     env_file: .env
     depends_on:
       - postgres
+      - redis
 
   postgres:
     image: postgres:latest
@@ -28,3 +29,10 @@ services:
     mem_limit: 2G
     volumes:
       - ./postgres-data/postgres:/var/lib/postgresql/data
+
+  redis:
+    image: redis:latest
+    restart: always
+    container_name: redis
+    env_file: .env
+    mem_limit: 2G
