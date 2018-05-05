@@ -4,9 +4,27 @@ services:
   quiz_generator:
     build: .
     container_name: quiz
-    command: ./run.py
+    command: flask run --host=0.0.0.0
+    environment:
+      FLASK_DEBUG: 1
+    env_file: .env
+    ports:
+      - "5000:5000"
     volumes:
       - ./:/app
     stdin_open: true
     tty: true
     restart: always
+    mem_limit: 4G
+    env_file: .env
+    depends_on:
+      - postgres
+
+  postgres:
+    image: postgres:latest
+    restart: always
+    container_name: postgres
+    env_file: .env
+    mem_limit: 2G
+    volumes:
+      - ./postgres-data/postgres:/var/lib/postgresql/data
