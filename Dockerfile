@@ -4,6 +4,7 @@ RUN apt-get update -y
 RUN apt-get install -y --no-install-recommends python-setuptools python-dev
 COPY . /app
 WORKDIR /app
-RUN pip install --upgrade pip
+
+RUN pip install --upgrade pip==10.0.1
 RUN pip install -r requirements.txt
 ENV PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1

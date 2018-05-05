@@ -29,6 +29,7 @@ services:
     mem_limit: 2G
     volumes:
       - ./postgres-data/postgres:/var/lib/postgresql/data
+      # add backup folder
 
   redis:
     image: redis:latest
@@ -36,3 +37,33 @@ services:
     container_name: redis
     env_file: .env
     mem_limit: 2G
+
+  celery:
+    build: .
+    container_name: celery
+    env_file: .env
+    command: celery -A app:celery worker --loglevel=info
+    depends_on:
+      - redis
+      - quiz_generator
+    volumes:
+      - ./:/app
+    stdin_open: true
+    tty: true
+    restart: always
+    mem_limit: 1G
+
+  celerybeat:
+    build: .
+    container_name: celerybeat
+    env_file: .env
+    command: celery -A app:celery beat --loglevel=info -s ./run/celerybeat-schedule --pidfile=./run/celerybeat.pid
+    depends_on:
+      - redis
+      - quiz_generator
+    volumes:
+      - ./:/app
+    stdin_open: true
+    tty: true
+    restart: always
+    mem_limit: 500M

@@ -1,4 +1,5 @@
 import os
+from celery import Celery
 
 
 class Config:
@@ -7,6 +8,7 @@ class Config:
     BASE_DIR = os.path.abspath(os.path.dirname(__file__))
     CSRF_ENABLED = True
     SECRET_KEY = 'this-really-needs-to-be-changed'
+    SQLALCHEMY_TRACK_MODIFICATIONS = False
     SQLALCHEMY_DATABASE_URI = (
         f'postgresql'
         f'://{os.environ["POSTGRES_USER"]}'
@@ -26,6 +28,40 @@ class Config:
     )
     CACHE_DEFAULT_TIMEOUT = 60
     CACHE_KEY_PREFIX = 'main'
+
+    # celery
+    CELERY_TASK_SERIALIZER = 'json'
+    CELERY_BROKER_URL = CELERY_RESULT_BACKEND = (
+        f"redis"
+        f"://{os.environ['CACHE_REDIS_HOST']}"
+        f":{os.environ['CACHE_REDIS_PORT']}"
+    )
+
+    # celerybeat
+    CELERYBEAT_SCHEDULE = {
+        'add-every-30-seconds': {
+            'task': 'app.add_together',
+            'schedule': 30.0,
+            'args': (16, 16)
+        },
+    }
+
+    @classmethod
+    def make_celery(cls, app):
+        celery = Celery(
+            app.import_name,
+            backend=cls.CELERY_RESULT_BACKEND,
+            broker=cls.CELERY_BROKER_URL,
+        )
+        celery.conf.update(app.config)
+
+        class ContextTask(celery.Task):
+            def __call__(self, *args, **kwargs):
+                with app.app_context():
+                    return self.run(*args, **kwargs)
+
+        celery.Task = ContextTask
+        return celery
 
 
 class DevConfig(Config):
