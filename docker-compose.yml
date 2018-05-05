@@ -1,0 +1,12 @@
+version: "2"
+services:
+
+  quiz_generator:
+    build: .
+    container_name: quiz
+    command: ./run.py
+    volumes:
+      - ./:/app
+    stdin_open: true
+    tty: true
+    restart: always

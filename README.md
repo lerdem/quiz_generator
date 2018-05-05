@@ -1,0 +1,15 @@
+## Docker
+### To build all images
+```console
+$ docker-compose -f ./docker-compose.yml build quiz_generator
+```
+
+### start all containers
+```console
+$ docker-compose -f ./docker-compose.yml up -d
+```
+
+### check status
+```console
+$ docker-compose -f ./docker-compose.yml ps
+```
