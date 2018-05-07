@@ -6,5 +6,5 @@ COPY . /app
 WORKDIR /app
 
 RUN pip install --upgrade pip==10.0.1
-RUN pip install -r requirements.txt
+RUN pip install -r ./requirements/development.txt
 ENV PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1

@@ -13,3 +13,11 @@ $ docker-compose -f ./docker-compose.yml up -d
 ```console
 $ docker-compose -f ./docker-compose.yml ps
 ```
+
+
+## Tests
+### run tests
+```console
+$ docker exec -it quiz
+```
+ 

@@ -1,5 +1,7 @@
 import os
 from celery import Celery
+from flask import Flask
+from jinja2 import StrictUndefined
 
 
 class Config:
@@ -40,11 +42,13 @@ class Config:
     # celerybeat
     CELERYBEAT_SCHEDULE = {
         'add-every-30-seconds': {
-            'task': 'app.add_together',
+            'task': 'app.account.tasks.add_together',
             'schedule': 30.0,
             'args': (16, 16)
         },
     }
+
+    JINJA_UNDEFINED = StrictUndefined
 
     @classmethod
     def make_celery(cls, app):
@@ -63,6 +67,15 @@ class Config:
         celery.Task = ContextTask
         return celery
 
+    @classmethod
+    def create_app(cls, conf_class=None):
+        app = Flask(__name__)
+        if conf_class is None:
+            app.config.from_object(f'configs.{os.environ["CONFIG_CLASS"]}')
+        else:
+            app.config.from_object(f'configs.{conf_class}')
+        return app
+
 
 class DevConfig(Config):
     DEBUG = True
@@ -76,3 +89,4 @@ class ProdConfig(Config):
 class TestingConfig(Config):
     TESTING = True
     SQLALCHEMY_DATABASE_URI = 'sqlite:///:memory:'
+    SERVER_NAME = 'localhost:5001'

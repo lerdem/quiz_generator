@@ -1,3 +1,4 @@
 1. static compressor
 2. logs
 3. tests https://flask-testing.readthedocs.io/en/latest/
+4. https://flask-debugtoolbar.readthedocs.io/en/latest/
