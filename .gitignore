@@ -5,3 +5,6 @@ postgres-data/
 run/
 logs/
 backups/
+.pytest_cache/
+src/app/.pytest_cache
+tmp.py
