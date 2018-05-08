@@ -37,5 +37,10 @@ vine==1.1.4
 wcwidth==0.1.7
 Werkzeug==0.14.1
 flask-wtf
-pytest-flask
 requests
+flask-compress
+nose
+flask-testing
+Flask-Assets
+jsmin
+cssmin

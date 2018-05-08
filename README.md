@@ -20,4 +20,10 @@ $ docker-compose -f ./docker-compose.yml ps
 ```console
 $ docker exec -it quiz
 ```
- 
+
+
+## Static
+### build bundles
+```console
+$ docker exec -it quiz flask assets build
+``` 

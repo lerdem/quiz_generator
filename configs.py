@@ -1,6 +1,4 @@
 import os
-from celery import Celery
-from flask import Flask
 from jinja2 import StrictUndefined
 
 
@@ -40,6 +38,7 @@ class Config:
     )
 
     # celerybeat
+    CELERY_IMPORTS = ('app.account.tasks', )
     CELERYBEAT_SCHEDULE = {
         'add-every-30-seconds': {
             'task': 'app.account.tasks.add_together',
@@ -50,36 +49,19 @@ class Config:
 
     JINJA_UNDEFINED = StrictUndefined
 
-    @classmethod
-    def make_celery(cls, app):
-        celery = Celery(
-            app.import_name,
-            backend=cls.CELERY_RESULT_BACKEND,
-            broker=cls.CELERY_BROKER_URL,
-        )
-        celery.conf.update(app.config)
+    COMPRESS_MIMETYPES = ('text/html', 'text/css', 'text/xml', 'application/json', 'application/javascript')
+    COMPRESS_LEVEL = 6
+    COMPRESS_MIN_SIZE = 500
 
-        class ContextTask(celery.Task):
-            def __call__(self, *args, **kwargs):
-                with app.app_context():
-                    return self.run(*args, **kwargs)
-
-        celery.Task = ContextTask
-        return celery
-
-    @classmethod
-    def create_app(cls, conf_class=None):
-        app = Flask(__name__)
-        if conf_class is None:
-            app.config.from_object(f'configs.{os.environ["CONFIG_CLASS"]}')
-        else:
-            app.config.from_object(f'configs.{conf_class}')
-        return app
+    ASSETS_DEBUG = False
+    ASSETS_AUTO_BUILD = False
 
 
 class DevConfig(Config):
     DEBUG = True
     SQLALCHEMY_ECHO = True
+    ASSETS_DEBUG = True
+    ASSETS_AUTO_BUILD = True
 
 
 class ProdConfig(Config):
@@ -89,4 +71,4 @@ class ProdConfig(Config):
 class TestingConfig(Config):
     TESTING = True
     SQLALCHEMY_DATABASE_URI = 'sqlite:///:memory:'
-    SERVER_NAME = 'localhost:5001'
+    LIVESERVER_PORT = 5001

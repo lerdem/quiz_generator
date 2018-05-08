@@ -5,6 +5,9 @@ postgres-data/
 run/
 logs/
 backups/
-.pytest_cache/
-src/app/.pytest_cache
 tmp.py
+
+app/static/compressed_static/
+app/static/.webassets-cache/
+
+!.gitkeep

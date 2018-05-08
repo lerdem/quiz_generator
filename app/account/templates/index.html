@@ -2,7 +2,9 @@
 
 {% block title %}Index{% endblock title %}
 {% block content %}Hello Index
-    {% for user in context.users %}
-        {{ user.id }} - {{ user.name }}
+    {% for i in context.cycle %}
+        {% for user in context.users %}
+            {{ user.id }} - {{ user.name }}
+        {% endfor %}
     {% endfor %}
 {% endblock content %}
