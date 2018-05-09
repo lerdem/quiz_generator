@@ -1,18 +1,12 @@
 import os
 
 from flask import Flask
-from celery import Celery
 from flask_assets import Bundle
 
 from configs import Config
 
 
-def create_celery(app):
-    celery = Celery(
-        'celery',
-        backend=app.config['CELERY_RESULT_BACKEND'],
-        broker=app.config['CELERY_BROKER_URL']
-    )
+def create_celery(app, celery):
 
     celery.conf.update(app.config)
 
@@ -22,6 +16,7 @@ def create_celery(app):
                 return self.run(*args, **kwargs)
 
     celery.Task = ContextTask
+
     return celery
 
 
@@ -36,19 +31,27 @@ def create_app(conf_class=None):
     app.jinja_env.undefined = Config.JINJA_UNDEFINED  # maybe there is a better way to pass this variable
 
     # init extensions
-    from app.extensions import db, cache, migrate, compress, assets
+    from app.extensions import db, cache, migrate, compress, assets, sentry, celery
 
     db.init_app(app)
     cache.init_app(app)
     migrate.init_app(app, db)
     compress.init_app(app)
     assets.init_app(app)
+    sentry.init_app(app)
+
+    celery = create_celery(app, celery)
+
+    app.extensions['celery'] = celery
 
     # static slim
     js = Bundle('js/main.js', filters='jsmin', output='compressed_static/packed.js')
     css = Bundle('css/main.css', filters='cssmin', output='compressed_static/packed.css')
     assets.register('js_all', js)
     assets.register('css_all', css)
+
+    for handler in Config.LOGGING_HANDLERS:
+        app.logger.addHandler(handler)
 
     # urls
     from app.account.views import blueprint as account_bp

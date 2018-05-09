@@ -2,13 +2,13 @@ import requests
 from flask_testing import LiveServerTestCase
 
 from app.factories import create_app, create_celery
-from app.extensions import db, assets
+from app.extensions import db, assets, celery
 
 
 class BaseLiveServerTestCase(LiveServerTestCase):
     def create_app(self):
         app = create_app("TestingConfig")
-        self.celery = create_celery(app)
+        self.celery = create_celery(app, celery)
 
         with app.app_context():
             db.drop_all()

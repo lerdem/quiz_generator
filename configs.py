@@ -1,11 +1,19 @@
 import os
 from jinja2 import StrictUndefined
+import logging.handlers
+
+BASE_DIR = os.path.abspath(os.path.dirname(__file__))
+FILE_HANDLER = logging.handlers.RotatingFileHandler(
+    os.path.join(BASE_DIR, 'logs/app_logs/app.log'),
+    maxBytes=1024 * 1024,
+    backupCount=10,
+)
 
 
 class Config:
     DEBUG = False
     TESTING = False
-    BASE_DIR = os.path.abspath(os.path.dirname(__file__))
+    BASE_DIR = BASE_DIR
     CSRF_ENABLED = True
     SECRET_KEY = 'this-really-needs-to-be-changed'
     SQLALCHEMY_TRACK_MODIFICATIONS = False
@@ -35,7 +43,7 @@ class Config:
     CELERY_RESULT_BACKEND = REDIS_URL + os.environ['CELERY_RESULT_DB']
 
     # celerybeat
-    CELERY_IMPORTS = ('app.account.tasks', )
+    CELERY_IMPORTS = ('app.account.tasks',)
     CELERYBEAT_SCHEDULE = {
         'add-every-30-seconds': {
             'task': 'app.account.tasks.add_together',
@@ -53,6 +61,17 @@ class Config:
     ASSETS_DEBUG = False
     ASSETS_AUTO_BUILD = False
 
+    SENTRY_CONFIG = {
+        'dsn': os.environ['SENTRY_DSN'],
+    }
+
+    FILE_HANDLER.setLevel(logging.WARNING)
+
+    LOGGING_HANDLERS = (
+        FILE_HANDLER,
+    )
+    SENTRY_USER_ATTRS = ('username', 'first_name', 'last_name', 'email')
+
 
 class DevConfig(Config):
     DEBUG = True
@@ -61,6 +80,7 @@ class DevConfig(Config):
     ASSETS_AUTO_BUILD = True
     DEBUG_TB_PROFILER_ENABLED = True
     DEBUG_TB_TEMPLATE_EDITOR_ENABLED = True
+    FILE_HANDLER.setLevel(logging.DEBUG)
 
 
 class ProdConfig(Config):
@@ -71,3 +91,7 @@ class TestingConfig(Config):
     TESTING = True
     SQLALCHEMY_DATABASE_URI = 'sqlite:///:memory:'
     LIVESERVER_PORT = 5001
+    SENTRY_CONFIG = {
+        'ignore_exceptions': [Exception],
+    }
+    LOGGING_HANDLERS = ()

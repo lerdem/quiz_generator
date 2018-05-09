@@ -7,4 +7,6 @@ WORKDIR /project
 
 RUN pip install --upgrade pip==10.0.1
 RUN pip install -r ./requirements/development.txt
+
+RUN chmod 777 -R logs
 ENV PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1

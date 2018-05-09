@@ -2,12 +2,14 @@
 __pycache__/
 postgres-data/
 
-run/
-logs/
-backups/
+run/celery*
+logs/*.log
+logs/app_logs/*.log
+backups/*
 tmp.py
 
 app/static/compressed_static/
 app/static/.webassets-cache/
 
 !.gitkeep
+.env

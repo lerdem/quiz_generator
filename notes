@@ -1,1 +1,7 @@
-1. logs
+1. configure logging
+2. Add FileRotatingLogger to celery/beat
+
+# to fix
+sudo chmod 777 -R logs
+docker permissions to write file after start
+

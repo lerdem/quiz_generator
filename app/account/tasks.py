@@ -1,4 +1,4 @@
-from app.application import celery
+from app.extensions import celery
 
 
 @celery.task(bind=True)
