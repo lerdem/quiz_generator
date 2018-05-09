@@ -20,22 +20,19 @@ class Config:
 
     # redis config
     CACHE_TYPE = 'redis'
-    CACHE_REDIS_URL = (
+    REDIS_URL = (
         f"redis"
         f"://{os.environ['CACHE_REDIS_HOST']}"
-        f":{os.environ['CACHE_REDIS_PORT']}"
-        f"/{os.environ['CACHE_REDIS_DB']}"
+        f":{os.environ['CACHE_REDIS_PORT']}/"
     )
+    CACHE_REDIS_URL = REDIS_URL + os.environ['CACHE_REDIS_DB']
     CACHE_DEFAULT_TIMEOUT = 60
     CACHE_KEY_PREFIX = 'main'
 
     # celery
     CELERY_TASK_SERIALIZER = 'json'
-    CELERY_BROKER_URL = CELERY_RESULT_BACKEND = (
-        f"redis"
-        f"://{os.environ['CACHE_REDIS_HOST']}"
-        f":{os.environ['CACHE_REDIS_PORT']}"
-    )
+    CELERY_BROKER_URL = REDIS_URL + os.environ['CELERY_BROKER_DB']
+    CELERY_RESULT_BACKEND = REDIS_URL + os.environ['CELERY_RESULT_DB']
 
     # celerybeat
     CELERY_IMPORTS = ('app.account.tasks', )
@@ -62,6 +59,8 @@ class DevConfig(Config):
     SQLALCHEMY_ECHO = True
     ASSETS_DEBUG = True
     ASSETS_AUTO_BUILD = True
+    DEBUG_TB_PROFILER_ENABLED = True
+    DEBUG_TB_TEMPLATE_EDITOR_ENABLED = True
 
 
 class ProdConfig(Config):

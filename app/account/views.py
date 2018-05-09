@@ -19,5 +19,5 @@ class Index(MethodView):
         return render_template('index.html', context=context)
 
 
-blueprint = Blueprint('account', __name__, url_prefix='/account', template_folder='templates')
+blueprint = Blueprint('account', __name__, url_prefix='/account')
 blueprint.add_url_rule('/', view_func=Index.as_view('index'))
