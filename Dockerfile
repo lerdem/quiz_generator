@@ -8,5 +8,8 @@ WORKDIR /project
 RUN pip install --upgrade pip==10.0.1
 RUN pip install -r ./requirements/development.txt
 
-RUN chmod 777 -R logs
+#RUN chmod 777 -R logs
+#RUN chmod 777 -R run
+#RUN chmod 777 -R migrations
+
 ENV PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1

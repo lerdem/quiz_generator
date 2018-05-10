@@ -50,6 +50,7 @@ def create_app(conf_class=None):
     assets.register('js_all', js)
     assets.register('css_all', css)
 
+    # TODO get handlers through app
     for handler in Config.LOGGING_HANDLERS:
         app.logger.addHandler(handler)
 

@@ -1,3 +1,15 @@
+## Start Project
+#### create .env file in root folder
+#### configure with your settings
+### RUN
+```console
+$ docker-compose -f ./docker-compose.yml up -d --build
+$ docker exec -it quiz flask shell
+>>> from app.extensions import db
+>>> db.create_all()
+
+```
+###[Check it](http://127.0.0.1:5000/account/)
 ## Docker
 ### To build all images
 ```console

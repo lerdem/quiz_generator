@@ -3,6 +3,8 @@ from jinja2 import StrictUndefined
 import logging.handlers
 
 BASE_DIR = os.path.abspath(os.path.dirname(__file__))
+
+# TODO I don't really like how logging is configured
 FILE_HANDLER = logging.handlers.RotatingFileHandler(
     os.path.join(BASE_DIR, 'logs/app_logs/app.log'),
     maxBytes=1024 * 1024,
@@ -15,7 +17,7 @@ class Config:
     TESTING = False
     BASE_DIR = BASE_DIR
     CSRF_ENABLED = True
-    SECRET_KEY = 'this-really-needs-to-be-changed'
+    SECRET_KEY = os.environ['SECRET_KEY']
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     SQLALCHEMY_DATABASE_URI = (
         f'postgresql'
@@ -61,10 +63,7 @@ class Config:
     ASSETS_DEBUG = False
     ASSETS_AUTO_BUILD = False
 
-    SENTRY_CONFIG = {
-        'dsn': os.environ['SENTRY_DSN'],
-    }
-
+    SENTRY_CONFIG = {'dsn': os.environ.get('SENTRY_DSN', '')}
     FILE_HANDLER.setLevel(logging.WARNING)
 
     LOGGING_HANDLERS = (
@@ -84,7 +83,7 @@ class DevConfig(Config):
 
 
 class ProdConfig(Config):
-    DATABASE_URI = 'mysql://user@localhost/foo'
+    SENTRY_CONFIG = {'dsn': os.environ['SENTRY_DSN']}
 
 
 class TestingConfig(Config):
@@ -93,5 +92,6 @@ class TestingConfig(Config):
     LIVESERVER_PORT = 5001
     SENTRY_CONFIG = {
         'ignore_exceptions': [Exception],
+        'dsn': '',
     }
     LOGGING_HANDLERS = ()
