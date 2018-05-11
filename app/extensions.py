@@ -5,6 +5,7 @@ from flask_migrate import Migrate
 from flask_compress import Compress
 from flask_assets import Environment
 from raven.contrib.flask import Sentry
+from flask_htmlmin import HTMLMIN
 
 from configs import Config
 
@@ -20,3 +21,4 @@ celery = Celery(
     backend=Config.CELERY_RESULT_BACKEND,
     broker=Config.CELERY_BROKER_URL,
 )
+html_min = HTMLMIN()

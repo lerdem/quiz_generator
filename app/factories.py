@@ -31,7 +31,7 @@ def create_app(conf_class=None):
     app.jinja_env.undefined = Config.JINJA_UNDEFINED  # maybe there is a better way to pass this variable
 
     # init extensions
-    from app.extensions import db, cache, migrate, compress, assets, sentry, celery
+    from app.extensions import db, cache, migrate, compress, assets, sentry, celery, html_min
 
     db.init_app(app)
     cache.init_app(app)
@@ -39,6 +39,7 @@ def create_app(conf_class=None):
     compress.init_app(app)
     assets.init_app(app)
     sentry.init_app(app)
+    html_min.init_app(app)
 
     celery = create_celery(app, celery)
 

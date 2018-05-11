@@ -70,6 +70,8 @@ class Config:
         FILE_HANDLER,
     )
     SENTRY_USER_ATTRS = ('username', 'first_name', 'last_name', 'email')
+    # TODO test it
+    MINIFY_PAGE = True
 
 
 class DevConfig(Config):
