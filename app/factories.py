@@ -3,7 +3,7 @@ import os
 from flask import Flask
 from flask_assets import Bundle
 
-from app import extensions as ext
+from app import extensions as ext, error_handlers
 
 from configs import Config
 
@@ -40,6 +40,7 @@ def create_app(conf_class=None):
     ext.assets.init_app(app)
     ext.sentry.init_app(app)
     ext.html_min.init_app(app)
+    ext.login_manager.init_app(app)
 
     celery = create_celery(app, ext.celery)
 
@@ -61,16 +62,12 @@ def create_app(conf_class=None):
     app.register_blueprint(account_bp)
 
     # register error handlers
-    from app.error_handlers import (
-        not_found, forbidden, bad_request,
-        internal_server, unauthorized, gone,
-    )
-    app.register_error_handler(400, bad_request)
-    app.register_error_handler(401, unauthorized)
-    app.register_error_handler(403, forbidden)
-    app.register_error_handler(404, not_found)
-    app.register_error_handler(410, gone)
-    app.register_error_handler(500, internal_server)
+    app.register_error_handler(400, error_handlers.bad_request)
+    app.register_error_handler(401, error_handlers.unauthorized)
+    app.register_error_handler(403, error_handlers.forbidden)
+    app.register_error_handler(404, error_handlers.not_found)
+    app.register_error_handler(410, error_handlers.gone)
+    app.register_error_handler(500, error_handlers.internal_server)
 
     # debug toolbar
     if app.config['DEBUG']:

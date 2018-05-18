@@ -6,6 +6,7 @@ from flask_compress import Compress
 from flask_assets import Environment
 from raven.contrib.flask import Sentry
 from flask_htmlmin import HTMLMIN
+from flask_login import LoginManager
 
 from configs import Config
 
@@ -22,3 +23,4 @@ celery = Celery(
     broker=Config.CELERY_BROKER_URL,
 )
 html_min = HTMLMIN()
+login_manager = LoginManager()
