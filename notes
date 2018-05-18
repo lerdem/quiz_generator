@@ -1,5 +1,7 @@
 1. configure logging
 2. Add FileRotatingLogger to celery/beat
+3. https://pytest-flask.readthedocs.io/en/latest/features.html
+4. https://github.com/pypa/pipenv
 
 # to fix
 sudo chmod 777 -R logs

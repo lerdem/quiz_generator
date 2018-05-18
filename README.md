@@ -30,7 +30,7 @@ $ docker-compose -f ./docker-compose.yml ps
 ## Tests
 ### run tests
 ```console
-$ docker exec -it quiz nosetests -v
+$ docker exec -it quiz py.test
 ```
 
 

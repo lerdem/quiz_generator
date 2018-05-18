@@ -10,6 +10,8 @@ tmp.py
 
 app/static/compressed_static/
 app/static/.webassets-cache/
+.pytest_cache/
 
 !.gitkeep
 .env
+tmp.py

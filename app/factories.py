@@ -3,6 +3,8 @@ import os
 from flask import Flask
 from flask_assets import Bundle
 
+from app import extensions as ext
+
 from configs import Config
 
 
@@ -31,25 +33,23 @@ def create_app(conf_class=None):
     app.jinja_env.undefined = Config.JINJA_UNDEFINED  # maybe there is a better way to pass this variable
 
     # init extensions
-    from app.extensions import db, cache, migrate, compress, assets, sentry, celery, html_min
+    ext.db.init_app(app)
+    ext.cache.init_app(app)
+    ext.migrate.init_app(app, ext.db)
+    ext.compress.init_app(app)
+    ext.assets.init_app(app)
+    ext.sentry.init_app(app)
+    ext.html_min.init_app(app)
 
-    db.init_app(app)
-    cache.init_app(app)
-    migrate.init_app(app, db)
-    compress.init_app(app)
-    assets.init_app(app)
-    sentry.init_app(app)
-    html_min.init_app(app)
-
-    celery = create_celery(app, celery)
+    celery = create_celery(app, ext.celery)
 
     app.extensions['celery'] = celery
 
     # static slim
     js = Bundle('js/main.js', filters='jsmin', output='compressed_static/packed.js')
     css = Bundle('css/main.css', filters='cssmin', output='compressed_static/packed.css')
-    assets.register('js_all', js)
-    assets.register('css_all', css)
+    ext.assets.register('js_all', js)
+    ext.assets.register('css_all', css)
 
     # TODO get handlers through app
     for handler in Config.LOGGING_HANDLERS:

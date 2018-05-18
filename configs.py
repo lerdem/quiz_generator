@@ -90,6 +90,7 @@ class ProdConfig(Config):
 
 class TestingConfig(Config):
     TESTING = True
+    ASSETS_AUTO_BUILD = True
     SQLALCHEMY_DATABASE_URI = 'sqlite:///:memory:'
     LIVESERVER_PORT = 5001
     SENTRY_CONFIG = {
