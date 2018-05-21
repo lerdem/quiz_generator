@@ -7,8 +7,8 @@ $ docker-compose -f ./docker-compose.yml up -d --build
 $ docker exec -it quiz flask shell
 >>> from app.extensions import db
 >>> db.create_all()
-
 ```
+
 ###[Check it](http://127.0.0.1:5000/account/)
 ## Docker
 ### To build all images

@@ -43,7 +43,7 @@ services:
     build: .
     container_name: celery
     env_file: .env
-    command: celery -A app.application:celery worker --loglevel=DEBUG --logfile=./logs/celery.log
+    command: celery -A app.application:celery worker --loglevel=DEBUG --logfile=$PROJECT_ROOT/logs/celery.log --pidfile=$PROJECT_ROOT/run/celery.pid
     depends_on:
       - redis
       - quiz_generator
@@ -58,7 +58,7 @@ services:
     build: .
     container_name: celerybeat
     env_file: .env
-    command: celery -A app.application:celery beat --loglevel=DEBUG -s ./run/celerybeat-schedule --pidfile=./run/celerybeat.pid --logfile=./logs/celerybeat.log
+    command: celery -A app.application:celery beat --loglevel=DEBUG -s $PROJECT_ROOT/run/celerybeat-schedule --pidfile=$PROJECT_ROOT/run/celerybeat.pid --logfile=$PROJECT_ROOT/logs/celerybeat.log
     depends_on:
       - redis
       - quiz_generator
