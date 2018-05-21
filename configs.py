@@ -1,23 +1,21 @@
 import os
-from jinja2 import StrictUndefined
 import logging.handlers
 
-BASE_DIR = os.path.abspath(os.path.dirname(__file__))
+from jinja2 import StrictUndefined
 
-# TODO I don't really like how logging is configured
-FILE_HANDLER = logging.handlers.RotatingFileHandler(
-    os.path.join(BASE_DIR, 'logs/app_logs/app.log'),
-    maxBytes=1024 * 1024,
-    backupCount=10,
-)
+BASE_DIR = os.path.abspath(os.path.dirname(__file__))
+LOGS_DIR = os.path.join(BASE_DIR, 'logs')
 
 
 class Config:
+    ENV = os.environ["ENV"]
     DEBUG = False
     TESTING = False
     BASE_DIR = BASE_DIR
     CSRF_ENABLED = True
     SECRET_KEY = os.environ['SECRET_KEY']
+
+    # sqlalchemy
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     SQLALCHEMY_DATABASE_URI = (
         f'postgresql'
@@ -29,12 +27,14 @@ class Config:
     )
 
     # redis config
-    CACHE_TYPE = 'redis'
     REDIS_URL = (
         f"redis"
         f"://{os.environ['CACHE_REDIS_HOST']}"
         f":{os.environ['CACHE_REDIS_PORT']}/"
     )
+
+    # cache
+    CACHE_TYPE = 'redis'
     CACHE_REDIS_URL = REDIS_URL + os.environ['CACHE_REDIS_DB']
     CACHE_DEFAULT_TIMEOUT = 60
     CACHE_KEY_PREFIX = 'main'
@@ -54,22 +54,37 @@ class Config:
         },
     }
 
+    # jinja
     JINJA_UNDEFINED = StrictUndefined
 
+    # compress
     COMPRESS_MIMETYPES = ('text/html', 'text/css', 'text/xml', 'application/json', 'application/javascript')
     COMPRESS_LEVEL = 6
     COMPRESS_MIN_SIZE = 500
 
+    # assets
+    COMPRESS_STATIC_DIR = os.path.join(BASE_DIR, 'app', 'static', 'compressed_static')
     ASSETS_DEBUG = False
     ASSETS_AUTO_BUILD = False
 
-    SENTRY_CONFIG = {'dsn': os.environ.get('SENTRY_DSN', '')}
-    FILE_HANDLER.setLevel(logging.WARNING)
+    # logging handlers
+    FILE_HANDLER = logging.handlers.RotatingFileHandler(
+        os.path.join(LOGS_DIR, 'app_logs', 'app.log'),
+        maxBytes=1024 * 1024,
+        backupCount=10,
+    )
 
+    # logging
+    LOGGING_LEVEL = logging.WARNING
     LOGGING_HANDLERS = (
         FILE_HANDLER,
     )
+
+    # sentry
+    SENTRY_CONFIG = {'dsn': os.environ.get('SENTRY_DSN', '')}
     SENTRY_USER_ATTRS = ('username', 'first_name', 'last_name', 'email')
+
+    # html minify
     # TODO test it
     MINIFY_PAGE = True
 
@@ -81,7 +96,7 @@ class DevConfig(Config):
     ASSETS_AUTO_BUILD = True
     DEBUG_TB_PROFILER_ENABLED = True
     DEBUG_TB_TEMPLATE_EDITOR_ENABLED = True
-    FILE_HANDLER.setLevel(logging.DEBUG)
+    LOGGING_LEVEL = logging.DEBUG
 
 
 class ProdConfig(Config):
@@ -89,6 +104,7 @@ class ProdConfig(Config):
 
 
 class TestingConfig(Config):
+    HASH_ROUNDS = 1
     TESTING = True
     ASSETS_AUTO_BUILD = True
     SQLALCHEMY_DATABASE_URI = 'sqlite:///:memory:'

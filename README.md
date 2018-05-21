@@ -30,7 +30,7 @@ $ docker-compose -f ./docker-compose.yml ps
 ## Tests
 ### run tests
 ```console
-$ docker exec -it quiz py.test
+$ docker exec -it quiz py.test -v
 ```
 
 
@@ -42,3 +42,8 @@ $ docker exec -it quiz flask assets build
 
 ## Sentry
 ###in order to use or test senty register at [Sentry](https://docs.sentry.io/)
+
+### stdout pip packages and dependencies
+```
+$ docker exec -it quiz pipdeptree
+```
