@@ -1,6 +1,8 @@
 import os
-from jinja2 import StrictUndefined
 import logging.handlers
+
+from jinja2 import StrictUndefined
+
 
 BASE_DIR = os.path.abspath(os.path.dirname(__file__))
 
@@ -70,6 +72,7 @@ class Config:
         FILE_HANDLER,
     )
     SENTRY_USER_ATTRS = ('username', 'first_name', 'last_name', 'email')
+
     # TODO test it
     MINIFY_PAGE = True
 

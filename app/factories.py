@@ -2,9 +2,9 @@ import os
 
 from flask import Flask
 from flask_assets import Bundle
+from raven.contrib.celery import register_signal, register_logger_signal
 
 from app import extensions as ext, error_handlers
-
 from configs import Config
 
 
@@ -43,8 +43,14 @@ def create_app(conf_class=None):
     ext.login_manager.init_app(app)
 
     celery = create_celery(app, ext.celery)
-
     app.extensions['celery'] = celery
+
+    # send celery errors
+    ext.client.set_dsn(app.config['SENTRY_CONFIG']['dsn'])
+    register_logger_signal(ext.client)
+    register_signal(ext.client)
+    # TODO check log level
+    register_logger_signal(ext.client, loglevel=app.logger.level)
 
     # static slim
     js = Bundle('js/main.js', filters='jsmin', output='compressed_static/packed.js')

@@ -2,7 +2,6 @@ alembic==0.9.9
 amqp==2.2.2
 backcall==0.1.0
 billiard==3.5.0.3
-blinker==1.4
 celery==4.1.0
 certifi==2018.4.16
 chardet==3.0.4
@@ -53,3 +52,4 @@ raven[flask]
 Flask-HTMLmin
 pytest-flask
 flask-login
+pipdeptree

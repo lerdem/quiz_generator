@@ -42,3 +42,8 @@ $ docker exec -it quiz flask assets build
 
 ## Sentry
 ###in order to use or test senty register at [Sentry](https://docs.sentry.io/)
+
+### stdout pip packages and dependencies
+```
+$ docker exec -it quiz pipdeptree
+```
