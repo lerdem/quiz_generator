@@ -1,8 +1,8 @@
-from flask import render_template, Blueprint, current_app, request
+from flask import render_template, Blueprint, request, current_app
 from flask.views import MethodView
 
 from app.account.models import User
-from app.extensions import cache, sentry
+from app.extensions import sentry
 from app.account.tasks import add_together
 
 
@@ -10,12 +10,8 @@ class Index(MethodView):
 
     def get(self):
 
-        print(add_together.delay(23, 4))
-        cache.set('KEY', "VALUE")
-        print(f"CACHE {cache.get('KEY')}")
-
+        add_together.delay(23, 4)
         sentry.captureMessage(f'hello, world! {sentry.get_user_info(request)}')
-        print(current_app.logger)
         current_app.logger.info(f'{sentry.get_user_info(request)} failed to log in')
 
         context = {
