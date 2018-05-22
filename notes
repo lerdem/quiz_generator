@@ -3,6 +3,7 @@
 3. https://pytest-flask.readthedocs.io/en/latest/features.html
 4. https://flask-login.readthedocs.io/en/latest/
 5. https://pythonhosted.org/Flask-Mail/
+6. https://flask-pymongo.readthedocs.io/en/latest/  for logs
 
 # to fix
 sudo chmod 777 -R logs
