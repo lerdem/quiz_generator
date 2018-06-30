@@ -9,7 +9,7 @@ $ docker exec -it quiz flask shell
 >>> db.create_all()
 ```
 
-###[Check it](http://127.0.0.1:5000/account/)
+#### [Check it](http://127.0.0.1:5000/account/)
 ## Docker
 ### To build all images
 ```console
@@ -41,7 +41,7 @@ $ docker exec -it quiz flask assets build
 ``` 
 
 ## Sentry
-###in order to use or test senty register at [Sentry](https://docs.sentry.io/)
+#### in order to use or test senty register at [Sentry](https://docs.sentry.io/)
 
 ### stdout pip packages and dependencies
 ```
